@@ -1,0 +1,40 @@
+{
+  "name": "romantic-page",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Vyacheslav-hub/Drag-and-Drop#readme",
+  "bugs": {
+    "url": "https://github.com/Vyacheslav-hub/Drag-and-Drop/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vyacheslav-hub/Drag-and-Drop.git"
+  },
+  "license": "ISC",
+  "author": "Vyacheslav",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "start": "webpack serve --mode=development",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@eslint/js": "^10.0.1",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "html-webpack-plugin": "^5.6.7",
+    "mini-css-extract-plugin": "^2.10.2",
+    "webpack": "^5.108.4",
+    "webpack-cli": "^7.2.1",
+    "webpack-dev-server": "^6.0.0"
+  },
+  "dependencies": {
+    "core-js": "^3.49.0"
+  }
+}

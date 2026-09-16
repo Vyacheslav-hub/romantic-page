@@ -1,0 +1,354 @@
+.intro {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100svh;
+
+    overflow: hidden;
+
+    background:
+            radial-gradient(
+                    circle at 50% 45%,
+                    rgba(103, 25, 54, 0.35),
+                    transparent 35%
+            ),
+            radial-gradient(
+                    circle at 20% 20%,
+                    rgba(255, 64, 119, 0.08),
+                    transparent 30%
+            ),
+            #090508;
+}
+
+.intro::before {
+    content: '';
+
+    position: absolute;
+    inset: 0;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.02),
+                    transparent 40%
+            );
+
+    pointer-events: none;
+}
+
+/* Светящиеся пятна */
+
+.intro__glow {
+    position: absolute;
+
+    width: 350px;
+    height: 350px;
+
+    border-radius: 50%;
+
+    filter: blur(100px);
+
+    opacity: 0.15;
+
+    pointer-events: none;
+}
+
+.intro__glow--one {
+    top: -150px;
+    left: -100px;
+
+    background: #ff477e;
+}
+
+.intro__glow--two {
+    right: -150px;
+    bottom: -150px;
+
+    background: #b51f56;
+}
+
+/* Контент */
+
+.intro__content {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: min(90%, 600px);
+
+    text-align: center;
+
+    animation: introAppear 1.5s ease forwards;
+}
+
+/* Сердце */
+
+.intro__heart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 90px;
+    height: 90px;
+
+    margin-bottom: 28px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 67, 119, 0.08);
+
+    box-shadow:
+            0 0 30px rgba(255, 67, 119, 0.12),
+            inset 0 0 30px rgba(255, 67, 119, 0.04);
+
+    animation: heartContainer 3s ease-in-out infinite;
+}
+
+.intro__heart span {
+    display: block;
+
+    color: #ff477e;
+
+    font-family: Arial, sans-serif;
+    font-size: 42px;
+    line-height: 1;
+
+    text-shadow:
+            0 0 10px rgba(255, 71, 126, 0.7),
+            0 0 30px rgba(255, 71, 126, 0.4);
+
+    animation: heartBeat 1.8s ease-in-out infinite;
+}
+
+/* Надпись */
+
+.intro__caption {
+    margin: 0 0 18px;
+
+    color: rgba(255, 143, 171, 0.8);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+/* Заголовок */
+
+.intro__title {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 11vw, 76px);
+    font-weight: 400;
+
+    line-height: 0.95;
+    letter-spacing: -1px;
+}
+
+.intro__title span {
+    display: block;
+
+    margin-top: 8px;
+
+    color: #ff7f9f;
+}
+
+/* Описание */
+
+.intro__subtitle {
+    max-width: 400px;
+
+    margin: 28px 0 38px;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-size: 13px;
+    font-weight: 300;
+
+    line-height: 1.7;
+}
+
+/* Кнопка */
+
+.intro__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    min-width: 170px;
+
+    padding: 15px 26px;
+
+    border: 1px solid rgba(255, 127, 159, 0.3);
+    border-radius: 999px;
+
+    color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    font-size: 13px;
+    font-weight: 400;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow:
+            0 10px 40px rgba(0, 0, 0, 0.2);
+
+    transition:
+            transform 0.3s ease,
+            background 0.3s ease,
+            border-color 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.intro__button:hover {
+    border-color: rgba(255, 127, 159, 0.7);
+
+    background: rgba(255, 79, 129, 0.12);
+
+    box-shadow:
+            0 10px 40px rgba(255, 64, 119, 0.15);
+
+    transform: translateY(-3px);
+}
+
+.intro__button:active {
+    transform: translateY(0);
+}
+
+.intro__button-heart {
+    color: #ff6f96;
+
+    transition: transform 0.3s ease;
+}
+
+.intro__button:hover .intro__button-heart {
+    transform: scale(1.25);
+}
+
+/* Подсказка снизу */
+
+.intro__hint {
+    position: absolute;
+    z-index: 1;
+
+    right: 0;
+    bottom: 25px;
+    left: 0;
+
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.2);
+
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    animation: hintPulse 2.5s ease-in-out infinite;
+}
+
+/* Анимации */
+
+@keyframes introAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heartContainer {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+}
+
+@keyframes heartBeat {
+    0%,
+    40%,
+    100% {
+        transform: scale(1);
+    }
+
+    10% {
+        transform: scale(1.15);
+    }
+
+    20% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes hintPulse {
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Мобильные */
+
+@media (max-width: 480px) {
+    .intro__heart {
+        width: 76px;
+        height: 76px;
+
+        margin-bottom: 24px;
+    }
+
+    .intro__heart span {
+        font-size: 36px;
+    }
+
+    .intro__caption {
+        margin-bottom: 15px;
+
+        font-size: 10px;
+        letter-spacing: 4px;
+    }
+
+    .intro__subtitle {
+        max-width: 300px;
+
+        margin-top: 24px;
+        margin-bottom: 32px;
+
+        font-size: 12px;
+    }
+
+    .intro__button {
+        min-width: 160px;
+
+        padding: 14px 24px;
+    }
+}
