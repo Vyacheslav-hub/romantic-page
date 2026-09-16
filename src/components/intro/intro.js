@@ -1,6 +1,6 @@
 import './intro.css';
 
-export function createIntro() {
+export function createIntro(onOpen) {
     const intro = document.createElement('main');
 
     intro.className = 'intro';
@@ -40,6 +40,12 @@ export function createIntro() {
             <span>нажми, чтобы продолжить</span>
         </div>
     `;
+
+    const button = intro.querySelector('.intro__button');
+
+    button.addEventListener('click', () => {
+        onOpen();
+    });
 
     return intro;
 }

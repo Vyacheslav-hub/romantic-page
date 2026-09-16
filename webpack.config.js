@@ -46,6 +46,10 @@ export default (_env, argv) => ({
                 type: "asset/resource",
             },
             {
+                test: /\.(mp3|wav|ogg)$/i,
+                type: 'asset/resource',
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: "babel-loader",
