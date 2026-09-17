@@ -460,6 +460,7 @@ a {
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.1);
     cursor: pointer;
+    touch-action: none;
 }
 
 .player__progress-bar::before {
