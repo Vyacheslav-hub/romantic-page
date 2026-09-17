@@ -2,13 +2,13 @@
   "name": "romantic-page",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/Vyacheslav-hub/Drag-and-Drop#readme",
+  "homepage": "https://github.com/Vyacheslav-hub/romantic-page#readme",
   "bugs": {
-    "url": "https://github.com/Vyacheslav-hub/Drag-and-Drop/issues"
+    "url": "https://github.com/Vyacheslav-hub/romantic-page/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Vyacheslav-hub/Drag-and-Drop.git"
+    "url": "git+https://github.com/Vyacheslav-hub/romantic-page.git"
   },
   "license": "ISC",
   "author": "Vyacheslav",
