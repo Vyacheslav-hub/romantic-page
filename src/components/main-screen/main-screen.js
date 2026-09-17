@@ -206,11 +206,17 @@ export function createMainScreen(audio) {
     function triggerMoment(moment) {
         switch (moment.effect) {
             case 'hearts':
-                createSmallHeartBurst(hearts);
+                createSmallHeartBurst(
+                    hearts,
+                    moment.amount,
+                );
                 break;
 
             case 'heartStorm':
-                createHeartStorm(hearts, 60);
+                createHeartStorm(
+                    hearts,
+                    moment.amount,
+                );
                 break;
 
             default:
@@ -301,8 +307,11 @@ export function createMainScreen(audio) {
     return screen;
 }
 
-function createSmallHeartBurst(container) {
-    for (let i = 0; i < 8; i++) {
+function createSmallHeartBurst(
+    container,
+    amount = 8,
+) {
+    for (let i = 0; i < amount; i++) {
         setTimeout(() => {
             createHeart(container);
         }, i * 100);

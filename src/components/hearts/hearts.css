@@ -1,9 +1,4 @@
 .hearts {
-    --heart-color: #ff668e;
-    --rotation: 0deg;
-    --x: 0px;
-    --y: 0px;
-
     position: absolute;
     z-index: 0;
     inset: 0;
@@ -12,12 +7,18 @@
 }
 
 .heart {
+    --heart-color: #ff668e;
+    --rotation: 0deg;
+    --drift: 0px;
+    --x: 0px;
+    --y: 0px;
+
     position: absolute;
     bottom: -40px;
     color: var(--heart-color);
     opacity: 0;
     filter:
-            drop-shadow(0 0 6px rgba(255, 80, 130, 0.5));
+            drop-shadow(0 0 5px rgba(255, 80, 130, 0.45));
     animation-name: heartFloat;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
@@ -27,23 +28,27 @@
     0% {
         opacity: 0;
         transform:
-                translateY(0)
+                translate3d(0, 0, 0)
                 rotate(var(--rotation))
-                scale(0.7);
+                scale(0.65);
     }
 
     10% {
-        opacity: 0.75;
+        opacity: 0.7;
+    }
+
+    45% {
+        opacity: 0.65;
     }
 
     80% {
-        opacity: 0.5;
+        opacity: 0.35;
     }
 
     100% {
         opacity: 0;
         transform:
-                translateY(-110vh)
+                translate3d(var(--drift), -110vh, 0)
                 rotate(calc(var(--rotation) + 180deg))
                 scale(1);
     }
@@ -56,7 +61,8 @@
             drop-shadow(0 0 8px rgba(255, 60, 120, 0.9))
             drop-shadow(0 0 20px rgba(255, 60, 120, 0.5));
     animation-name: heartStorm;
-    animation-timing-function: cubic-bezier(0.12, 0.75, 0.25, 1);
+    animation-timing-function:
+            cubic-bezier(0.12, 0.75, 0.25, 1);
     animation-fill-mode: forwards;
 }
 
@@ -75,7 +81,7 @@
     }
 
     25% {
-        opacity: 1;
+        opacity: 0.95;
     }
 
     100% {
@@ -125,4 +131,14 @@
                 translate(-50%, -50%)
                 scale(8);
     }
+}
+
+.hearts {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
 }

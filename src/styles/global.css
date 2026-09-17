@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap');
 
 * {
     box-sizing: border-box;
@@ -7,16 +7,22 @@
 html,
 body {
     margin: 0;
+    width: 100%;
     min-height: 100%;
+    overflow: hidden;
 }
 
 body {
     min-height: 100vh;
-
     color: #ffffff;
     background: #090508;
-
     font-family: 'Montserrat', sans-serif;
+}
+
+#app {
+    width: 100%;
+    min-height: 100svh;
+    overflow: hidden;
 }
 
 button {

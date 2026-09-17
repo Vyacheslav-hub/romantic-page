@@ -24,18 +24,36 @@ export function createHeart(container) {
     heart.className = 'heart';
 
     heart.textContent =
-        heartTypes[Math.floor(Math.random() * heartTypes.length)];
+        heartTypes[
+            Math.floor(Math.random() * heartTypes.length)
+            ];
 
     const size = random(10, 22);
-    const duration = random(5, 10);
+    const duration = random(6, 11);
     const left = random(0, 100);
-    const rotation = random(-30, 30);
+    const rotation = random(-25, 25);
+    const drift = random(-80, 80);
+    const delay = random(0, 0.5);
 
     heart.style.left = `${left}%`;
     heart.style.fontSize = `${size}px`;
     heart.style.animationDuration = `${duration}s`;
-    heart.style.setProperty('--rotation', `${rotation}deg`);
-    heart.style.setProperty('--heart-color', randomColor());
+    heart.style.animationDelay = `${delay}s`;
+
+    heart.style.setProperty(
+        '--rotation',
+        `${rotation}deg`,
+    );
+
+    heart.style.setProperty(
+        '--drift',
+        `${drift}px`,
+    );
+
+    heart.style.setProperty(
+        '--heart-color',
+        randomColor(),
+    );
 
     container.append(heart);
 
@@ -44,7 +62,10 @@ export function createHeart(container) {
     });
 }
 
-export function createHeartStorm(container, amount = 60) {
+export function createHeartStorm(
+    container,
+    amount = 60,
+) {
     createStormFlash(container);
 
     for (let i = 0; i < amount; i++) {
@@ -60,10 +81,12 @@ function createStormHeart(container) {
     heart.className = 'heart heart--storm';
 
     heart.textContent =
-        heartTypes[Math.floor(Math.random() * heartTypes.length)];
+        heartTypes[
+            Math.floor(Math.random() * heartTypes.length)
+            ];
 
     const angle = random(0, Math.PI * 2);
-    const distance = random(120, 500);
+    const distance = random(140, 520);
 
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance;
@@ -78,10 +101,25 @@ function createStormHeart(container) {
     heart.style.fontSize = `${size}px`;
     heart.style.animationDuration = `${duration}s`;
 
-    heart.style.setProperty('--x', `${x}px`);
-    heart.style.setProperty('--y', `${y}px`);
-    heart.style.setProperty('--rotation', `${rotation}deg`);
-    heart.style.setProperty('--heart-color', randomColor());
+    heart.style.setProperty(
+        '--x',
+        `${x}px`,
+    );
+
+    heart.style.setProperty(
+        '--y',
+        `${y}px`,
+    );
+
+    heart.style.setProperty(
+        '--rotation',
+        `${rotation}deg`,
+    );
+
+    heart.style.setProperty(
+        '--heart-color',
+        randomColor(),
+    );
 
     container.append(heart);
 
