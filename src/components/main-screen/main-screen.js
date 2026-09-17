@@ -69,19 +69,17 @@ export function createMainScreen(audio) {
 
                 <div class="player__controls">
 
-                    <button
+                   <button
                         class="player__button player__button--play"
                         type="button"
                         aria-label="Воспроизвести"
-                    >
-                        <span class="player__play-icon">
-                            ▶
-                        </span>
-
+                        >
+                        <span class="player__play-icon"></span>
                         <span class="player__pause-icon">
-                            ❚❚
+                        <span></span>
+                        <span></span>
                         </span>
-                    </button>
+                   </button>
 
                 </div>
 
