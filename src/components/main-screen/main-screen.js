@@ -29,7 +29,6 @@ export function createMainScreen(audio) {
                         src="${cover}"
                         alt="Кадр из фильма «Зелёная книга»"
                     >
-
                 </div>
 
                 <div class="player__info">
@@ -44,7 +43,15 @@ export function createMainScreen(audio) {
 
                 <div class="player__progress">
 
-                    <div class="player__progress-bar">
+                    <div
+                        class="player__progress-bar"
+                        role="slider"
+                        tabindex="0"
+                        aria-label="Перемотка"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="0"
+                    >
                         <div class="player__progress-fill"></div>
                     </div>
 
@@ -63,27 +70,17 @@ export function createMainScreen(audio) {
                 <div class="player__controls">
 
                     <button
-                        class="player__button player__button--previous"
-                        type="button"
-                        aria-label="Назад"
-                    >
-                        ↶
-                    </button>
-
-                    <button
                         class="player__button player__button--play"
                         type="button"
                         aria-label="Воспроизвести"
                     >
-                        ▶
-                    </button>
+                        <span class="player__play-icon">
+                            ▶
+                        </span>
 
-                    <button
-                        class="player__button player__button--next"
-                        type="button"
-                        aria-label="Вперёд"
-                    >
-                        ↷
+                        <span class="player__pause-icon">
+                            ❚❚
+                        </span>
                     </button>
 
                 </div>
@@ -113,45 +110,187 @@ export function createMainScreen(audio) {
         '.player__duration',
     );
 
+    let heartsInterval = null;
+    let triggeredMoments = new Set();
+    let previousTime = 0;
+
+    function startHearts() {
+        if (heartsInterval !== null) {
+            return;
+        }
+
+        heartsInterval = setInterval(() => {
+            createHeart(hearts);
+        }, 1400);
+    }
+
+    function stopHearts() {
+        if (heartsInterval === null) {
+            return;
+        }
+
+        clearInterval(heartsInterval);
+
+        heartsInterval = null;
+    }
+
     function toggleAudio() {
+        if (audio.ended) {
+            audio.currentTime = 0;
+            triggeredMoments = new Set();
+        }
+
         if (audio.paused) {
-            audio.play();
+            audio.play().catch((error) => {
+                console.error(
+                    'Не удалось запустить аудио:',
+                    error,
+                );
+            });
         } else {
             audio.pause();
         }
     }
 
-    playButton.addEventListener('click', toggleAudio);
+    function seek(event) {
+        if (!Number.isFinite(audio.duration)) {
+            return;
+        }
+
+        const rect = progressBar.getBoundingClientRect();
+
+        const position =
+            (event.clientX - rect.left) / rect.width;
+
+        const progress = Math.max(
+            0,
+            Math.min(1, position),
+        );
+
+        audio.currentTime =
+            progress * audio.duration;
+    }
+
+    function updateProgress() {
+        if (!Number.isFinite(audio.duration)) {
+            return;
+        }
+
+        const progress =
+            audio.currentTime / audio.duration * 100;
+
+        progressFill.style.width = `${progress}%`;
+
+        currentTimeElement.textContent =
+            formatTime(audio.currentTime);
+
+        progressBar.setAttribute(
+            'aria-valuenow',
+            String(Math.round(audio.currentTime)),
+        );
+    }
+
+    function checkMoments() {
+        moments.forEach((moment, index) => {
+            if (
+                audio.currentTime >= moment.time &&
+                !triggeredMoments.has(index)
+            ) {
+                triggerMoment(moment);
+
+                triggeredMoments.add(index);
+            }
+        });
+    }
+
+    function triggerMoment(moment) {
+        switch (moment.effect) {
+            case 'hearts':
+                createSmallHeartBurst(hearts);
+                break;
+
+            case 'heartStorm':
+                createHeartStorm(hearts, 60);
+                break;
+
+            default:
+                console.warn(
+                    `Неизвестный эффект: ${moment.effect}`,
+                );
+        }
+    }
+
+    playButton.addEventListener(
+        'click',
+        toggleAudio,
+    );
+
+    progressBar.addEventListener(
+        'click',
+        seek,
+    );
 
     audio.addEventListener('play', () => {
-        playButton.textContent = '❚❚';
+        screen.classList.add('main-screen--playing');
+
+        playButton.setAttribute(
+            'aria-label',
+            'Пауза',
+        );
+
+        startHearts();
     });
 
     audio.addEventListener('pause', () => {
-        playButton.textContent = '▶';
+        screen.classList.remove('main-screen--playing');
+
+        playButton.setAttribute(
+            'aria-label',
+            'Воспроизвести',
+        );
+
+        stopHearts();
     });
 
     audio.addEventListener('loadedmetadata', () => {
         durationElement.textContent =
             formatTime(audio.duration);
+
+        progressBar.setAttribute(
+            'aria-valuemax',
+            String(Math.round(audio.duration)),
+        );
     });
 
     audio.addEventListener('timeupdate', () => {
-        updateProgress(
-            audio,
-            progressFill,
-            currentTimeElement,
-        );
-
-        checkMoments(audio, hearts);
+        updateProgress();
+        checkMoments();
     });
 
-    progressBar.addEventListener('click', (event) => {
-        const progress =
-            event.offsetX / progressBar.clientWidth;
+    audio.addEventListener('seeking', () => {
+        if (audio.currentTime < previousTime) {
+            triggeredMoments = new Set();
+        }
 
-        audio.currentTime =
-            progress * audio.duration;
+        previousTime = audio.currentTime;
+    });
+
+    audio.addEventListener('ended', () => {
+        stopHearts();
+
+        screen.classList.remove('main-screen--playing');
+
+        progressFill.style.width = '0%';
+        currentTimeElement.textContent = '0:00';
+
+        triggeredMoments = new Set();
+
+        previousTime = 0;
+
+        playButton.setAttribute(
+            'aria-label',
+            'Воспроизвести',
+        );
     });
 
     if (Number.isFinite(audio.duration)) {
@@ -159,51 +298,7 @@ export function createMainScreen(audio) {
             formatTime(audio.duration);
     }
 
-    if (!audio.paused) {
-        playButton.textContent = '❚❚';
-    }
-
-    const heartsInterval = setInterval(() => {
-        createHeart(hearts);
-    }, 1400);
-
-    audio.addEventListener('ended', () => {
-        clearInterval(heartsInterval);
-    });
-
     return screen;
-}
-
-let triggeredMoments = new Set();
-
-function checkMoments(audio, hearts) {
-    moments.forEach((moment, index) => {
-        if (
-            audio.currentTime >= moment.time &&
-            !triggeredMoments.has(index)
-        ) {
-            triggerMoment(moment, hearts);
-
-            triggeredMoments.add(index);
-        }
-    });
-}
-
-function triggerMoment(moment, hearts) {
-    switch (moment.effect) {
-        case 'hearts':
-            createSmallHeartBurst(hearts);
-            break;
-
-        case 'heartStorm':
-            createHeartStorm(hearts, 60);
-            break;
-
-        default:
-            console.warn(
-                `Неизвестный эффект: ${moment.effect}`,
-            );
-    }
 }
 
 function createSmallHeartBurst(container) {
@@ -212,24 +307,6 @@ function createSmallHeartBurst(container) {
             createHeart(container);
         }, i * 100);
     }
-}
-
-function updateProgress(
-    audio,
-    progressFill,
-    currentTimeElement,
-) {
-    if (!Number.isFinite(audio.duration)) {
-        return;
-    }
-
-    const progress =
-        audio.currentTime / audio.duration * 100;
-
-    progressFill.style.width = `${progress}%`;
-
-    currentTimeElement.textContent =
-        formatTime(audio.currentTime);
 }
 
 function formatTime(time) {
