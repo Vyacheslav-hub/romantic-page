@@ -21,7 +21,8 @@ export default (_env, argv) => ({
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
-            chunks: ['app']
+            chunks: ['app'],
+            favicon: './src/assets/faviconHeart.png',
         }),
         new MiniCssExtractPlugin({
             filename: "[name].css",
