@@ -1,6 +1,6 @@
 import './styles/global.css';
 
-import music from './assets/music.mp3';
+import music from './assets/musicGreenBook.MP3';
 
 import { createIntro } from './components/intro/intro.js';
 import { createMainScreen } from './components/main-screen/main-screen.js';
@@ -18,14 +18,19 @@ app.append(intro);
 function openPage() {
     intro.classList.add('intro--hidden');
 
+    const mainScreen = createMainScreen(audio);
+
+    app.append(mainScreen);
+
     audio.play()
         .catch((error) => {
-            console.error('Не удалось запустить музыку:', error);
+            console.error(
+                'Не удалось запустить музыку:',
+                error,
+            );
         });
 
     setTimeout(() => {
         intro.remove();
-
-        app.append(createMainScreen(audio));
-    }, 1000);
+    }, 500);
 }

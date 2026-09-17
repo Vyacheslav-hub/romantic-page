@@ -19,16 +19,6 @@ export function createIntro(onOpen) {
                 Для тебя
             </p>
 
-            <h1 class="intro__title">
-                Я приготовил
-                <span>кое-что особенное</span>
-            </h1>
-
-            <p class="intro__subtitle">
-                Небольшая история, которую я хочу
-                показать именно тебе
-            </p>
-
             <button class="intro__button" type="button">
                 <span>Открыть</span>
                 <span class="intro__button-heart">♥</span>

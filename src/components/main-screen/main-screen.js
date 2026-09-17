@@ -1,30 +1,49 @@
 import './main-screen.css';
 
+import {
+    createHearts,
+    createHeart,
+    createHeartStorm,
+} from '../hearts/hearts.js';
+
+import { moments } from '../../data/moments.js';
+
+import cover from '../../assets/greenBook.jpg';
+
 export function createMainScreen(audio) {
     const screen = document.createElement('main');
 
     screen.className = 'main-screen';
 
-    screen.innerHTML = `
+    const hearts = createHearts();
+
+    screen.append(hearts);
+
+    screen.insertAdjacentHTML('beforeend', `
         <div class="main-screen__content">
 
             <div class="player">
 
                 <div class="player__cover">
-                    <span>♥</span>
+                    <img
+                        src="${cover}"
+                        alt="Кадр из фильма «Зелёная книга»"
+                    >
+
                 </div>
 
                 <div class="player__info">
                     <p class="player__label">
-                        Сейчас играет
+                        Фрагмент из фильма
                     </p>
 
                     <h1 class="player__title">
-                        Для тебя
+                        «Зелёная книга»
                     </h1>
                 </div>
 
                 <div class="player__progress">
+
                     <div class="player__progress-bar">
                         <div class="player__progress-fill"></div>
                     </div>
@@ -38,6 +57,7 @@ export function createMainScreen(audio) {
                             0:00
                         </span>
                     </div>
+
                 </div>
 
                 <div class="player__controls">
@@ -45,7 +65,7 @@ export function createMainScreen(audio) {
                     <button
                         class="player__button player__button--previous"
                         type="button"
-                        aria-label="Предыдущий трек"
+                        aria-label="Назад"
                     >
                         ↶
                     </button>
@@ -61,7 +81,7 @@ export function createMainScreen(audio) {
                     <button
                         class="player__button player__button--next"
                         type="button"
-                        aria-label="Следующий трек"
+                        aria-label="Вперёд"
                     >
                         ↷
                     </button>
@@ -71,11 +91,19 @@ export function createMainScreen(audio) {
             </div>
 
         </div>
-    `;
+    `);
 
-    const playButton = screen.querySelector('.player__button--play');
-    const progressBar = screen.querySelector('.player__progress-bar');
-    const progressFill = screen.querySelector('.player__progress-fill');
+    const playButton = screen.querySelector(
+        '.player__button--play',
+    );
+
+    const progressBar = screen.querySelector(
+        '.player__progress-bar',
+    );
+
+    const progressFill = screen.querySelector(
+        '.player__progress-fill',
+    );
 
     const currentTimeElement = screen.querySelector(
         '.player__current-time',
@@ -85,47 +113,123 @@ export function createMainScreen(audio) {
         '.player__duration',
     );
 
-    playButton.addEventListener('click', () => {
+    function toggleAudio() {
         if (audio.paused) {
             audio.play();
         } else {
             audio.pause();
         }
-    });
+    }
+
+    playButton.addEventListener('click', toggleAudio);
 
     audio.addEventListener('play', () => {
         playButton.textContent = '❚❚';
-        playButton.setAttribute('aria-label', 'Поставить на паузу');
     });
 
     audio.addEventListener('pause', () => {
         playButton.textContent = '▶';
-        playButton.setAttribute('aria-label', 'Воспроизвести');
     });
 
     audio.addEventListener('loadedmetadata', () => {
-        durationElement.textContent = formatTime(audio.duration);
+        durationElement.textContent =
+            formatTime(audio.duration);
     });
 
     audio.addEventListener('timeupdate', () => {
-        const progress = audio.currentTime / audio.duration * 100;
-
-        progressFill.style.width = `${progress}%`;
-
-        currentTimeElement.textContent = formatTime(
-            audio.currentTime,
+        updateProgress(
+            audio,
+            progressFill,
+            currentTimeElement,
         );
+
+        checkMoments(audio, hearts);
     });
 
     progressBar.addEventListener('click', (event) => {
-        const width = progressBar.clientWidth;
-        const clickPosition = event.offsetX;
+        const progress =
+            event.offsetX / progressBar.clientWidth;
 
         audio.currentTime =
-            clickPosition / width * audio.duration;
+            progress * audio.duration;
+    });
+
+    if (Number.isFinite(audio.duration)) {
+        durationElement.textContent =
+            formatTime(audio.duration);
+    }
+
+    if (!audio.paused) {
+        playButton.textContent = '❚❚';
+    }
+
+    const heartsInterval = setInterval(() => {
+        createHeart(hearts);
+    }, 1400);
+
+    audio.addEventListener('ended', () => {
+        clearInterval(heartsInterval);
     });
 
     return screen;
+}
+
+let triggeredMoments = new Set();
+
+function checkMoments(audio, hearts) {
+    moments.forEach((moment, index) => {
+        if (
+            audio.currentTime >= moment.time &&
+            !triggeredMoments.has(index)
+        ) {
+            triggerMoment(moment, hearts);
+
+            triggeredMoments.add(index);
+        }
+    });
+}
+
+function triggerMoment(moment, hearts) {
+    switch (moment.effect) {
+        case 'hearts':
+            createSmallHeartBurst(hearts);
+            break;
+
+        case 'heartStorm':
+            createHeartStorm(hearts, 60);
+            break;
+
+        default:
+            console.warn(
+                `Неизвестный эффект: ${moment.effect}`,
+            );
+    }
+}
+
+function createSmallHeartBurst(container) {
+    for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+            createHeart(container);
+        }, i * 100);
+    }
+}
+
+function updateProgress(
+    audio,
+    progressFill,
+    currentTimeElement,
+) {
+    if (!Number.isFinite(audio.duration)) {
+        return;
+    }
+
+    const progress =
+        audio.currentTime / audio.duration * 100;
+
+    progressFill.style.width = `${progress}%`;
+
+    currentTimeElement.textContent =
+        formatTime(audio.currentTime);
 }
 
 function formatTime(time) {
@@ -136,5 +240,7 @@ function formatTime(time) {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
 
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds
+        .toString()
+        .padStart(2, '0')}`;
 }
