@@ -524,8 +524,27 @@ a {
     transform: scale(0.94);
 }
 
+.player__play-icon {
+    width: 0;
+    height: 0;
+    margin-left: 4px;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 13px solid #ffffff;
+}
+
 .player__pause-icon {
     display: none;
+    align-items: center;
+    gap: 5px;
+}
+
+.player__pause-icon span {
+    display: block;
+    width: 4px;
+    height: 17px;
+    border-radius: 2px;
+    background: #ffffff;
 }
 
 .main-screen--playing .player__play-icon {
@@ -533,7 +552,7 @@ a {
 }
 
 .main-screen--playing .player__pause-icon {
-    display: block;
+    display: flex;
 }
 
 .main-screen--playing .player__button {
